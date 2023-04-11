@@ -6,7 +6,8 @@ import os
 load_dotenv()
 disc_token = os.getenv("env_BotTOKEN")
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
 client = commands.Bot(command_prefix = '!',intents=intents)
 
 @client.event
