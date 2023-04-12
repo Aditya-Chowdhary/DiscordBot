@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 import os
 
@@ -37,8 +38,12 @@ async def on_member_remove(member):
 @client.command(pass_context = True)
 async def vcjoin(ctx):
     if (ctx.author.voice):
+        await ctx.send("Joining the voice channel!")
         channel = ctx.message.author.voice.channel
-        await channel.connect()
+        voice = await channel.connect()
+        source = FFmpegPCMAudio('Film.mp3')
+        player = voice.play(source)
+
     else:
         await ctx.send("You must be in a voice channel to run this command")
 
