@@ -4,6 +4,8 @@ from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 import os
 import openai
+from pytube import YouTube
+
 
 load_dotenv()
 disc_token = os.getenv("env_BotTOKEN")
@@ -119,9 +121,21 @@ async def stop(ctx):
 @client.command(pass_context = True)
 async def play(ctx, arg):
     voice = ctx.guild.voice_client
-    song = arg + '.mp3'
-    source = FFmpegPCMAudio(song)
-    player = voice.play(source)
+
+    link = arg
+    yt = YouTube(link)
+    downloader = yt.streams.filter(only_audio=True).get_audio_only()
+    downloader.download()
+    title = yt.title
+    for i in "!@#$%^&*\(\)\{\}|":
+        title = title.replace(i, '')
+    title = title+'.mp4'
+
+
+    source = FFmpegPCMAudio(title)
+    voice.play(source)
+
+
 
 client.run(f'{disc_token}')
 
