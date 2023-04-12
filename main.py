@@ -9,7 +9,16 @@ disc_token = os.getenv("env_BotTOKEN")
 
 intents = discord.Intents.all()
 
+queues = {}
+
+def check_queue(ctx, id):
+    if queues[id]:
+        voice = ctx.guild.voice_client
+        source = queues[id].pop(0)
+        player = voice.play(source)
+
 client = commands.Bot(command_prefix = '!',intents=intents)
+
 
 @client.event
 async def on_ready():
@@ -83,8 +92,24 @@ async def stop(ctx):
 @client.command(pass_context = True)
 async def play(ctx, arg):
     voice = ctx.guild.voice_client
-    source = FFmpegPCMAudio(arg)
-    player = voice.play(source)
+    song = arg + '.mp3'
+    source = FFmpegPCMAudio(song)
+    player = voice.play(source, after=lambda x=None: check_queue(ctx, ctx.guild.id))
+
+@client.command(pass_context = True)
+async def queue(ctx, arg):
+    voice = ctx.guild.voice_client
+    song = arg + '.mp3'
+    source = FFmpegPCMAudio(song)
+
+    guild_id = ctx.guild.id
+
+    if guild_id in queues:
+        queues[guild_id].append(source)
+    else:
+        queues[guild_id] = [source]
+
+    await ctx.send(f"{song} has been added to queue.")
 
 
 
