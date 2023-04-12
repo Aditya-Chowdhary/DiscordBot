@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 import os
 import openai
@@ -67,6 +68,60 @@ async def gpt(ctx, *args):
     api_answer = api_answer[pos + 1:]
     await ctx.send(f"GPT Response is: {api_answer}")
 
+
+@client.command(pass_context = True)
+async def vcjoin(ctx):
+    if (ctx.author.voice):
+        await ctx.send("Joining the voice channel!")
+        channel = ctx.message.author.voice.channel
+        await channel.connect()
+
+    else:
+        await ctx.send("You must be in a voice channel to run this command")
+        return
+    
+
+@client.command(pass_context = True)
+async def vcleave(ctx):
+    if (ctx.voice_client):
+        await ctx.guild.voice_client.disconnect()
+        await ctx.send("I have left the voice channel")
+    else:
+        await ctx.send("I am not in a voice channel")
+
+
+@client.command(pass_context = True)
+async def pause(ctx):
+    voice = discord.utils.get(client.voice_clients, guild = ctx.guild)
+    if voice.is_playing():
+        voice.pause()
+        await ctx.send("Audio has been paused")
+    else:
+        await ctx.send("I am not playing anything!")
+
+
+@client.command(pass_context = True)
+async def resume(ctx):
+    voice = discord.utils.get(client.voice_clients, guild = ctx.guild)
+    if voice.is_paused():
+        voice.resume()
+        await ctx.send("Audio has been resumed")
+    else:
+        await ctx.send("No audio has been paused!")
+
+
+@client.command(pass_context = True)
+async def stop(ctx):
+    voice = discord.utils.get(client.voice_clients, guild = ctx.guild)
+    voice.stop()
+
+
+@client.command(pass_context = True)
+async def play(ctx, arg):
+    voice = ctx.guild.voice_client
+    song = arg + '.mp3'
+    source = FFmpegPCMAudio(song)
+    player = voice.play(source)
 
 client.run(f'{disc_token}')
 
