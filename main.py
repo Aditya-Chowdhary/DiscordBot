@@ -34,5 +34,23 @@ async def on_member_remove(member):
     await channel.send(f"Goodbye {member.display_name}")
 
 
+@client.command(pass_context = True)
+async def vcjoin(ctx):
+    if (ctx.author.voice):
+        channel = ctx.message.author.voice.channel
+        await channel.connect()
+    else:
+        await ctx.send("You must be in a voice channel to run this command")
+
+
+@client.command(pass_context = True)
+async def vcleave(ctx):
+    if (ctx.voice_client):
+        await ctx.guild.voice_client.disconnect()
+        await ctx.send("I have left the voice channel")
+    else:
+        await ctx.send("I am not in a voice channel")
+
+
 client.run(f'{disc_token}')
 
