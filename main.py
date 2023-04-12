@@ -127,7 +127,7 @@ async def play(ctx, arg):
     downloader = yt.streams.filter(only_audio=True).get_audio_only()
     downloader.download()
     title = yt.title
-    for i in "!@#$%^&*\(\)\{\}|":
+    for i in "\\/:*?\"<>|":
         title = title.replace(i, '')
     title = title+'.mp4'
 
