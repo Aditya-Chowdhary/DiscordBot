@@ -26,11 +26,11 @@ async def on_ready():
 @client.command()
 async def jeff(ctx):
     await ctx.send(f"My name is Jeff")
-    
+
 
 @client.command()
 async def hello(ctx):
-    user = ctx.author.nick
+    user = ctx.author.name
     await ctx.send(f"Hello {user}, this is the bot")
 
 
