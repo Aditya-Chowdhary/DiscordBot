@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 import openai
 from pytube import YouTube
+from datetime import datetime
+import asyncio
 
 
 load_dotenv()
@@ -23,7 +25,7 @@ async def on_ready():
 
 @client.command()
 async def hello(ctx):
-    user = ctx.author
+    user = ctx.author.nick
     await ctx.send(f"Hello {user}, this is the bot")
 
 
@@ -47,7 +49,7 @@ def get_api_response(prompt):
             model='text-davinci-003',
             prompt = prompt,
             temperature=0.9,
-            max_tokens=150,
+            max_tokens=50,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0.6,
@@ -63,8 +65,8 @@ def get_api_response(prompt):
     return text
 
 @client.command(pass_request = True)
-async def gpt(ctx, *args):
-    user_prompt = ' '.join(args)
+async def gpt(ctx, *, arg):
+    user_prompt = arg
     api_answer = get_api_response(user_prompt)
     pos = api_answer.find("\n")
     api_answer = api_answer[pos + 1:]
@@ -134,6 +136,30 @@ async def play(ctx, arg):
 
     source = FFmpegPCMAudio(title)
     voice.play(source)
+
+
+@client.command(pass_context = True)
+async def reminder(ctx, time_str, date_str, *args):
+    try:
+        if args:
+            remind_msg = f" - \"{' '.join(args)}\""
+        else:
+            remind_msg = ''
+
+        time =datetime.strptime(time_str, "%H:%M")
+        date =datetime.strptime(date_str, "%d/%m/%Y")
+
+        now = datetime.now()
+        delay = (datetime.combine(date, time.time())-now).total_seconds()
+        if delay<0:
+            await ctx.send("ERROR: Cannot set a reminder for the past")
+        else:
+            await ctx.send("Reminder has been set successfully{remind_msg}")
+            await asyncio.sleep(delay)
+            await ctx.send(f"{ctx.author.mention}, you have a reminder{remind_msg}!")
+
+    except ValueError:
+        await ctx.send("ERROR: Please enter reminder in the correct format: HH:MM[24 hr format] dd/mm/yyyy")
 
 
 
