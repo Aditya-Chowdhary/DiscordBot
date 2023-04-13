@@ -24,6 +24,11 @@ async def on_ready():
 
 
 @client.command()
+async def jeff(ctx):
+    await ctx.send(f"My name is Jeff")
+    
+
+@client.command()
 async def hello(ctx):
     user = ctx.author.nick
     await ctx.send(f"Hello {user}, this is the bot")
@@ -57,7 +62,7 @@ def get_api_response(prompt):
         )
 
         choices = response.get('choices')[0]
-        text = choices.get('text')
+        text = choices.get('text').strip()
 
     except Exception as e:
         print('ERROR: ', e)
@@ -66,11 +71,16 @@ def get_api_response(prompt):
 
 @client.command(pass_request = True)
 async def gpt(ctx, *, arg):
-    user_prompt = arg
-    api_answer = get_api_response(user_prompt)
-    pos = api_answer.find("\n")
-    api_answer = api_answer[pos + 1:]
-    await ctx.send(f"GPT Response is: {api_answer}")
+
+    prompt_list = ["You are a chatbot for a discord server. Respond to prompts in a helpful, yet brief manner",
+                    "\nHuman: Hello, who are you?",
+                    "\nAI: Hi! I am a discord bot. How can I help you!"]
+    prompt = ''.join(prompt_list)
+    prompt += f'\nHuman: {arg}'
+    response = get_api_response(prompt)
+    pos = response.find("\nAI: ")
+    response = response[pos + 5:]
+    await ctx.send(f"GPT Response is: {response}")
 
 
 @client.command(pass_context = True)
