@@ -1,3 +1,7 @@
+'''
+THIS IS NOT PART OF THE MAIN LOGIC/CODE. THIS IS MERELY A TESTING AREA TO TRY OUT SOME OF THE OTHER APIS
+'''
+
 # from discord import FFmpegPCMAudio
 # import youtube_dl
 
