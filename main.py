@@ -111,6 +111,9 @@ async def queue(ctx, arg):
 
     await ctx.send(f"{song} has been added to queue.")
 
+@client.event
+async def on_message(message):
+    print(message)
 
 
 client.run(f'{disc_token}')
