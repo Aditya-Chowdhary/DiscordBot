@@ -124,5 +124,3 @@ async def on_message(message):
 
 
 client.run(f'{disc_token}')
-
-test
