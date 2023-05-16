@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 import os
+from better_profanity import profanity
 
 load_dotenv()
 disc_token = os.getenv("env_BotTOKEN")
@@ -111,6 +112,15 @@ async def queue(ctx, arg):
 
     await ctx.send(f"{song} has been added to queue.")
 
+@client.event
+async def on_message(message):
+    await client.process_commands(message)
+    # print(message)
+    if message.author.name == "JeffTheBot":
+        return
+    if profanity.contains_profanity(message.content):
+        await message.delete()
+        await message.channel.send("Please do not send a message with profanity!")
 
 
 client.run(f'{disc_token}')
