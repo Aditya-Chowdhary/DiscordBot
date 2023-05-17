@@ -146,6 +146,10 @@ async def ban_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("You don't have permission to ban people!")
 
-
-
+@client.command()
+async def embed(ctx):
+    embed = discord.Embed(title="Dog", url="https://google.com", description="We love dogs", color=0x4dff4d)
+    embed.set_author(name=ctx.author, url= "https://google.com", icon_url="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg")
+    await ctx.send(embed=embed)
+ 
 client.run(f'{disc_token}')
