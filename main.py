@@ -22,7 +22,7 @@ def check_queue(ctx, id):
 
 client = commands.Bot(command_prefix = '!',intents=intents)
 
-
+# Gabra Gay
 @client.event
 async def on_ready():
     print("The bot is now ready")

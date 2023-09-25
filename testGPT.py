@@ -2,6 +2,7 @@ import os
 import openai
 from dotenv import load_dotenv
 
+# Nimish gay
 def get_api_response(prompt):
     text = None
 
